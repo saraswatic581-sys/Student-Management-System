@@ -1,124 +1,165 @@
 // Online C compiler (editor)
 // Write and run C online using this editor.
 
-
 #include <stdio.h>
+#include <string.h>
 
-struct Student {
-    int roll;
+struct Campaign
+{
+    int id;
     char name[50];
-    float marks;
+    char platform[30];
+    float budget;
+    float sales;
 };
 
-void addStudent() {
-    struct Student s;
-    FILE *fp = fopen("students.dat", "ab");
+struct Campaign c[100];
+int count = 0;
 
-    if (fp == NULL) {
-        printf("File error!");
-        return;
-    }
+void addCampaign()
+{
+    printf("\nEnter Campaign ID: ");
+    scanf("%d", &c[count].id);
 
-    printf("Enter Roll Number: ");
-    scanf("%d", &s.roll);
+    printf("Enter Campaign Name: ");
+    scanf(" %[^\n]", c[count].name);
 
-    printf("Enter Name (no spaces): ");
-    scanf("%49s", s.name);
+    printf("Enter Marketing Platform: ");
+    scanf(" %[^\n]", c[count].platform);
 
-    printf("Enter Marks: ");
-    scanf("%f", &s.marks);
+    printf("Enter Budget: ");
+    scanf("%f", &c[count].budget);
 
-    fwrite(&s, sizeof(s), 1, fp);
-    fclose(fp);
+    printf("Enter Sales Amount: ");
+    scanf("%f", &c[count].sales);
 
-    printf("Student added successfully!\n");
+    count++;
+
+    printf("\nCampaign Added Successfully!\n");
 }
 
-void viewStudents() {
-    struct Student s;
-    FILE *fp = fopen("students.dat", "rb");
+void viewCampaign()
+{
+    int i;
 
-    if (fp == NULL) {
-        printf("No records found.\n");
+    if (count == 0)
+    {
+        printf("\nNo Campaign Record Found!\n");
         return;
     }
 
-    printf("\n--- Student Records ---\n");
-
-    while (fread(&s, sizeof(s), 1, fp) == 1) {
-        printf("Roll: %d | Name: %s | Marks: %.2f\n",
-               s.roll, s.name, s.marks);
+    for (i = 0; i < count; i++)
+    {
+        printf("\nCampaign ID: %d", c[i].id);
+        printf("\nCampaign Name: %s", c[i].name);
+        printf("\nPlatform: %s", c[i].platform);
+        printf("\nBudget: %.2f", c[i].budget);
+        printf("\nSales: %.2f\n", c[i].sales);
     }
-
-    fclose(fp);
 }
 
-void searchStudent() {
-    struct Student s;
-    int roll, found = 0;
+void searchCampaign()
+{
+    int id, i, found = 0;
 
-    FILE *fp = fopen("students.dat", "rb");
+    printf("\nEnter Campaign ID to Search: ");
+    scanf("%d", &id);
 
-    if (fp == NULL) {
-        printf("No records found.\n");
-        return;
-    }
-
-    printf("Enter Roll Number to search: ");
-    scanf("%d", &roll);
-
-    while (fread(&s, sizeof(s), 1, fp) == 1) {
-        if (s.roll == roll) {
-            printf("Student Found!\n");
-            printf("Roll: %d\n", s.roll);
-            printf("Name: %s\n", s.name);
-            printf("Marks: %.2f\n", s.marks);
+    for (i = 0; i < count; i++)
+    {
+        if (c[i].id == id)
+        {
+            printf("\nCampaign Found!");
+            printf("\nName: %s", c[i].name);
+            printf("\nPlatform: %s", c[i].platform);
+            printf("\nBudget: %.2f", c[i].budget);
+            printf("\nSales: %.2f\n", c[i].sales);
             found = 1;
-            break;
         }
     }
 
-    if (found == 0) {
-        printf("Student not found.\n");
+    if (found == 0)
+    {
+        printf("\nCampaign Not Found!\n");
     }
-
-    fclose(fp);
 }
 
-int main() {
+void budgetReport()
+{
+    float total = 0;
+    int i;
+
+    for (i = 0; i < count; i++)
+    {
+        total = total + c[i].budget;
+    }
+
+    printf("\nTotal Marketing Budget = %.2f\n", total);
+}
+
+void salesReport()
+{
+    float totalSales = 0;
+    int i;
+
+    for (i = 0; i < count; i++)
+    {
+        totalSales = totalSales + c[i].sales;
+    }
+
+    printf("\nTotal Sales = %.2f\n", totalSales);
+}
+
+int main()
+{
     int choice;
 
-    do {
-        printf("\n===== Student Management System =====\n");
-        printf("1. Add Student\n");
-        printf("2. View Students\n");
-        printf("3. Search Student\n");
-        printf("4. Exit\n");
-        printf("Enter your choice: ");
+    do
+    {
+        printf("\n==================================");
+        printf("\n INTERNET MARKETING MANAGEMENT");
+        printf("\n==================================");
+        printf("\n1. Add Campaign");
+        printf("\n2. View Campaign");
+        printf("\n3. Search Campaign");
+        printf("\n4. Marketing Budget Report");
+        printf("\n5. Sales Report");
+        printf("\n6. Exit");
+        printf("\nEnter Your Choice: ");
+
         scanf("%d", &choice);
 
-        switch (choice) {
+        switch (choice)
+        {
             case 1:
-                addStudent();
+                addCampaign();
                 break;
 
             case 2:
-                viewStudents();
+                viewCampaign();
                 break;
 
             case 3:
-                searchStudent();
+                searchCampaign();
                 break;
 
             case 4:
-                printf("Thank you!\n");
+                budgetReport();
+                break;
+
+            case 5:
+                salesReport();
+                break;
+
+            case 6:
+                printf("\nThank You!");
                 break;
 
             default:
-                printf("Invalid choice!\n");
+                printf("\nInvalid Choice!");
         }
 
-    } while (choice != 4);
+    } while (choice != 6);
 
     return 0;
 }
