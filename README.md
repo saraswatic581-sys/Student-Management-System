@@ -1,2 +1,2 @@
-# Student-Management-System
-A student record management project using C programming language.
+#NETWORK MARKETTING MANAGEMENT। 
+management project using C programming language.
